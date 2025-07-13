@@ -71,5 +71,17 @@ struct LouvainFunction {
     static function::function_set getFunctionSet();
 };
 
+struct JaccardSimilarityFunction {
+    static constexpr const char* name = "JACCARD_SIMILARITY";
+
+    static function::function_set getFunctionSet();
+};
+
+struct JaccardSimilarityAliasFunction {
+    using alias = JaccardSimilarityFunction;
+
+    static constexpr const char* name = "JACCARD";
+};
+
 } // namespace algo_extension
 } // namespace kuzu
