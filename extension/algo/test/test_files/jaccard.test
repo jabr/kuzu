@@ -1,0 +1,99 @@
+-DATASET CSV tinysnb
+
+--
+
+-CASE JaccardSimilarityBasic
+-LOAD_DYNAMIC_EXTENSION algo
+-STATEMENT CALL PROJECT_GRAPH('Graph', ['person', 'organisation'], ['meets', 'knows', 'studyAt', 'workAt']);
+---- ok
+-STATEMENT CALL JACCARD_SIMILARITY('Graph') RETURN node1, node2, similarity;
+---- 21
+0:0|0:1|0.000000
+0:0|0:2|0.000000
+0:0|0:4|0.000000
+0:0|0:5|0.000000
+0:0|0:6|0.000000
+0:0|0:7|1.000000
+0:1|0:2|0.000000
+0:1|0:4|0.000000
+0:1|0:5|0.000000
+0:1|0:6|0.000000
+0:1|0:7|0.000000
+0:2|0:4|0.000000
+0:2|0:5|0.000000
+0:2|0:6|0.000000
+0:2|0:7|0.000000
+0:4|0:5|1.000000
+0:4|0:6|1.000000
+0:4|0:7|0.000000
+0:5|0:6|1.000000
+0:5|0:7|0.000000
+0:6|0:7|0.000000
+
+-CASE JaccardSimilarityAlias
+-LOAD_DYNAMIC_EXTENSION algo
+-STATEMENT CALL PROJECT_GRAPH('Graph', ['person', 'organisation'], ['meets', 'knows', 'studyAt', 'workAt']);
+---- ok
+-STATEMENT CALL JACCARD('Graph') RETURN node1, node2, similarity;
+---- 21
+0:0|0:1|0.000000
+0:0|0:2|0.000000
+0:0|0:4|0.000000
+0:0|0:5|0.000000
+0:0|0:6|0.000000
+0:0|0:7|1.000000
+0:1|0:2|0.000000
+0:1|0:4|0.000000
+0:1|0:5|0.000000
+0:1|0:6|0.000000
+0:1|0:7|0.000000
+0:2|0:4|0.000000
+0:2|0:5|0.000000
+0:2|0:6|0.000000
+0:2|0:7|0.000000
+0:4|0:5|1.000000
+0:4|0:6|1.000000
+0:4|0:7|0.000000
+0:5|0:6|1.000000
+0:5|0:7|0.000000
+0:6|0:7|0.000000
+
+-CASE JaccardSimilarityWithThreshold
+-LOAD_DYNAMIC_EXTENSION algo
+-STATEMENT CALL PROJECT_GRAPH('Graph', ['person', 'organisation'], ['meets', 'knows', 'studyAt', 'workAt']);
+---- ok
+-STATEMENT CALL JACCARD_SIMILARITY('Graph', threshold := 0.3) RETURN node1, node2, similarity;
+---- 4
+0:0|0:7|1.000000
+0:4|0:5|1.000000
+0:4|0:6|1.000000
+0:5|0:6|1.000000
+
+-CASE JaccardSimilarityWithTopK
+-LOAD_DYNAMIC_EXTENSION algo
+-STATEMENT CALL PROJECT_GRAPH('Graph', ['person', 'organisation'], ['meets', 'knows', 'studyAt', 'workAt']);
+---- ok
+-STATEMENT CALL JACCARD_SIMILARITY('Graph', topk := 1) RETURN node1, node2, similarity;
+---- 6
+0:0|0:7|1.000000
+0:1|0:2|0.000000
+0:2|0:4|0.000000
+0:4|0:5|1.000000
+0:5|0:6|1.000000
+0:6|0:7|0.000000
+
+-CASE JaccardSimilarityInvalidThreshold
+-LOAD_DYNAMIC_EXTENSION algo
+-STATEMENT CALL PROJECT_GRAPH('Graph', ['person', 'organisation'], ['meets', 'knows', 'studyAt', 'workAt']);
+---- ok
+-STATEMENT CALL JACCARD_SIMILARITY('Graph', threshold := 1.5) RETURN node1, node2, similarity;
+---- error
+Binder exception: Threshold must be in the [0, 1].
+
+-CASE JaccardSimilarityNegativeThreshold
+-LOAD_DYNAMIC_EXTENSION algo
+-STATEMENT CALL PROJECT_GRAPH('Graph', ['person', 'organisation'], ['meets', 'knows', 'studyAt', 'workAt']);
+---- ok
+-STATEMENT CALL JACCARD_SIMILARITY('Graph', threshold := -0.1) RETURN node1, node2, similarity;
+---- error
+Binder exception: Threshold must be in the [0, 1].
